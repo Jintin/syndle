@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+
+import argparse
+import syndle
+
+PARSE = "parse"
+CLONE = "clone"
+
+parser = argparse.ArgumentParser(description="clone gradle dependency into local maven repository")
+parser.add_argument("-v", "--version", action="version", version="%(prog)s " + syndle.__version__)
+
+subparsers = parser.add_subparsers(dest="sub_command")
+
+parse_cmd = subparsers.add_parser(PARSE, help="parse gradle and download dependency")
+parse_cmd.add_argument("-p", "--path", type=str, default=".", help="project root path")
+
+clone_cmd = subparsers.add_parser(CLONE, help="download dependency directly")
+clone_cmd.add_argument("-p", "--package", type=str, help="dependency package", required=True)
+clone_cmd.add_argument('-s','--servers', type=str, nargs='+', help='maven host servers', required=True)
+
+args = parser.parse_args()
+
+if args.sub_command == PARSE:
+    syndle.parse(args.path)
+elif args.sub_command == CLONE:
+    syndle.clone(args.package, args.server)
