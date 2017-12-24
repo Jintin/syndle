@@ -25,10 +25,11 @@ $ syndle clone -p <package> -s <server1> <server2> ...
 See `syndle --help` or `syndle <command> --help` for more information.
 
 ## TroubleShooting
-If you encounter SSL problem like following maybe your python is too old. Try to update Python 2.7.14+ or use Python 3.
+1. If you encounter SSL problem like following maybe your python is too old. Try to update Python 2.7.14+ or use Python 3.
 ```bash
 <urlopen error [SSL: TLSV1_ALERT_PROTOCOL_VERSION] tlsv1 alert protocol version (_ssl.c:590)>
 ```
+1. If you don't have to local maven repository, you can install mvn commend by `brew install maven` and run `mvn install`, the path will default in `~/.m2/repositories/`
 
 ## Contributing
 Bug reports and pull requests are welcome on GitHub at [https://github.com/Jintin/syndle](https://github.com/Jintin/syndle).
