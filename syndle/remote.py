@@ -19,8 +19,6 @@ AAR_LIST = [
     ".aar"
 ]
 
-HREF_LENGTH = len("href=\":")
-
 
 def parse(packages, urls=[URL_JCENTER], tree=[]):
     global servers
@@ -108,6 +106,7 @@ def findDependency(path, rootVersion):
                 group = xmlValue(dependency, "groupId")
                 name = xmlValue(dependency, "artifactId")
                 version = xmlValue(dependency, "version")
+                type = xmlValue(dependency, "type")
                 if version:
                     if version.startswith("["):
                         version = version.replace("[", "").replace("]", "")
@@ -115,7 +114,10 @@ def findDependency(path, rootVersion):
                         version = rootVersion
                     if "${" in version:  # TODO not support currently
                         continue
-                dispatch(group, name, version)
+                if type == "aar":
+                    dispatch(group, name, version, True)
+                else:
+                    dispatch(group, name, version)
         except Exception as e:
             pass
 
