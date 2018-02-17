@@ -1,4 +1,5 @@
 # syndle
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b0350843d734926958d31681765e6f1)](https://app.codacy.com/app/Jintin/syndle?utm_source=github.com&utm_medium=referral&utm_content=Jintin/syndle&utm_campaign=badger)
 [![PyPI version](https://badge.fury.io/py/syndle.svg)](https://badge.fury.io/py/syndle)
 [![Build Status](https://travis-ci.org/Jintin/syndle.svg?branch=master)](https://travis-ci.org/Jintin/syndle)
 
