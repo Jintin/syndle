@@ -6,7 +6,8 @@ from setuptools import setup
 setup(name='syndle',
       version=syndle.__version__,
       description='sync gradle dependency to local maven',
-      long_description='andle is a command line tool to help you sync dependencies, sdk or build tool version in gradle base Android projects.',
+      long_description='Synndle is a command line tool to help you sync dependencies,' +
+                       ' sdk or build tool version in gradle base Android projects.',
       keywords='android gradle config build version dependency sync',
       scripts=['bin/syndle'],
       url='http://github.com/Jintin/syndle',

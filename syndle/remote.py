@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import syndle.service as service
 import os
 from xml.dom import minidom

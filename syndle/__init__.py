@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import syndle.gradle as gradle
 import syndle.remote as remote
 import os

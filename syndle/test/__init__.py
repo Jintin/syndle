@@ -1,32 +1,31 @@
-#!/usr/bin/env python
-
-from unittest import TestCase
 import os
-import shutil
-import filecmp
+from unittest import TestCase
+
 import syndle
 import syndle.gradle
 
 
 class TestSyndle(TestCase):
-
     CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 
     def testParseSetting(self):
-        list = syndle.gradle.list(
-            self.CURRENT_PATH + "/test/settings.gradle")
-        self.assertEqual(list, ["app", "lib"])
+        projects = syndle.gradle.list(os.path.join(self.CURRENT_PATH, "test", "settings.gradle"))
+        self.assertEqual(projects, ["app", "lib"])
+
+    def testParseSetting2(self):
+        projects = syndle.gradle.list(os.path.join(self.CURRENT_PATH, "test", "settings2.gradle"))
+        self.assertEqual(projects, ["myAwesomeApp"])
+
+    def testParseSetting3(self):
+        projects = syndle.gradle.list(os.path.join(self.CURRENT_PATH, "test", "settings3.gradle"))
+        self.assertEqual(projects, ["myAwesomeApp"])
 
     def testParseGradle(self):
-        obj = syndle.gradle.parse(
-            self.CURRENT_PATH + "/test/root.gradle")
+        obj = syndle.gradle.parse(self.CURRENT_PATH + "/test/root.gradle")
 
-        list = ["https://www.jitpack.io", "google"]
-        map = obj["buildscript"]["repositories"]
-        for key in map:
-            self.assertIn(key, list)
+        projects = ["https://www.jitpack.io", "google", "https://www.jitpack.io", "google", "jcenter"]
+        for key in obj["buildscript"]["repositories"]:
+            self.assertIn(key, projects[0:2])
 
-        list = ["https://www.jitpack.io", "google", "jcenter"]
-        map = obj["allprojects"]["repositories"]
-        for key in map:
-            self.assertIn(key, list)
+        for key in obj["allprojects"]["repositories"]:
+            self.assertIn(key, projects[2:])
