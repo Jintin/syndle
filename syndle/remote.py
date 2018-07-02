@@ -1,8 +1,7 @@
-#!/usr/bin/env python
-
 import syndle.service as service
 import os
 from xml.dom import minidom
+import re
 
 PATH_MAVEN = os.path.expanduser("~/.m2/repository/")
 URL_JCENTER = "https://jcenter.bintray.com/"
@@ -20,18 +19,29 @@ AAR_LIST = [
 ]
 
 
-def parse(packages, urls=[URL_JCENTER], tree=[]):
+def parse_dependencies(dep_line):
+    pattern1 = re.compile(r"([\w\.0-9]+):([\w\.\-0-9]+):([\w\.0-9]+)")
+    match1 = pattern1.match(dep_line)
+    if match1:
+        group = match1.group(1)
+        name = match1.group(2)
+        version = match1.group(3)
+    else:
+        raise Exception("Malformed dependencies line: {0}".format(dep_line))
+    return group, name, version
+
+
+def parse(packages, urls=None, tree=None):
     global servers
-    servers = formServer(urls)
     global history
+    if tree is None:
+        tree = []
+    if urls is None:
+        urls = [URL_JCENTER]
+    servers = formServer(urls)
     history = tree
-    for package in packages:
-        data = package.split(":")
-        if len(data) != 3:
-            return
-        group = data[0]
-        name = data[1]
-        version = data[2]
+    for dep_line in packages:
+        group, name, version = parse_dependencies(dep_line)
         if version.endswith("@aar"):
             version = version.replace("@aar", "")
             dispatch(group, name, version, True)

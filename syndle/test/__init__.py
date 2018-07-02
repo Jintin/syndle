@@ -1,32 +1,38 @@
-#!/usr/bin/env python
-
-from unittest import TestCase
 import os
-import shutil
-import filecmp
+from unittest import TestCase
+
 import syndle
 import syndle.gradle
 
 
 class TestSyndle(TestCase):
-
     CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 
     def testParseSetting(self):
-        list = syndle.gradle.list(
-            self.CURRENT_PATH + "/test/settings.gradle")
-        self.assertEqual(list, ["app", "lib"])
+        projects = syndle.gradle.get_projects_names(os.path.join(self.CURRENT_PATH, "test", "settings.gradle"))
+        self.assertEqual(len(projects), 2)
+        self.assertEqual([x["name"] for x in projects], ["app", "lib"])
+
+    def testParseSetting2(self):
+        projects = syndle.gradle.get_projects_names(os.path.join(self.CURRENT_PATH, "test", "settings2.gradle"))
+        self.assertEqual(len(projects), 1)
+        self.assertEqual(projects[0]["name"], "myAwesomeApp")
+        self.assertFalse(projects[0]["is_subprojects"])
+
+    def testParseSetting3(self):
+        properties = syndle.load_gradle_property(os.path.join(self.CURRENT_PATH, "test",  "gradle.properties"))
+        projects = syndle.gradle.get_projects_names(os.path.join(self.CURRENT_PATH, "test", "settings3.gradle"), properties)
+        self.assertEqual(len(projects), 1)
+        self.assertEqual(projects[0]["name"], "myAwesomeApp")
+        self.assertFalse(projects[0]["is_subprojects"])
 
     def testParseGradle(self):
-        obj = syndle.gradle.parse(
-            self.CURRENT_PATH + "/test/root.gradle")
+        properties = syndle.load_gradle_property(os.path.join(self.CURRENT_PATH, "test",  "gradle.properties"))
+        obj = syndle.gradle.parse(self.CURRENT_PATH + "/test/root.gradle", properties)
 
-        list = ["https://www.jitpack.io", "google"]
-        map = obj["buildscript"]["repositories"]
-        for key in map:
-            self.assertIn(key, list)
+        projects = ["https://www.jitpack.io", "google", "https://www.jitpack.io", "google", "jcenter"]
+        for key in obj["buildscript"]["repositories"]:
+            self.assertIn(key, projects[0:2])
 
-        list = ["https://www.jitpack.io", "google", "jcenter"]
-        map = obj["allprojects"]["repositories"]
-        for key in map:
-            self.assertIn(key, list)
+        for key in obj["allprojects"]["repositories"]:
+            self.assertIn(key, projects[2:])

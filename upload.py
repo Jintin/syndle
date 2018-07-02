@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+
 import syndle
 
 os.system("sudo rm -rf dist")
