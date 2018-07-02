@@ -10,18 +10,25 @@ class TestSyndle(TestCase):
 
     def testParseSetting(self):
         projects = syndle.gradle.list(os.path.join(self.CURRENT_PATH, "test", "settings.gradle"))
-        self.assertEqual(projects, ["app", "lib"])
+        self.assertEqual(len(projects), 2)
+        self.assertEqual([x["name"] for x in projects], ["app", "lib"])
 
     def testParseSetting2(self):
         projects = syndle.gradle.list(os.path.join(self.CURRENT_PATH, "test", "settings2.gradle"))
-        self.assertEqual(projects, ["myAwesomeApp"])
+        self.assertEqual(len(projects), 1)
+        self.assertEqual(projects[0]["name"], "myAwesomeApp")
+        self.assertFalse(projects[0]["is_subprojects"])
 
     def testParseSetting3(self):
-        projects = syndle.gradle.list(os.path.join(self.CURRENT_PATH, "test", "settings3.gradle"))
-        self.assertEqual(projects, ["myAwesomeApp"])
+        properties = syndle.load_gradle_property(os.path.join(self.CURRENT_PATH, "test",  "gradle.properties"))
+        projects = syndle.gradle.list(os.path.join(self.CURRENT_PATH, "test", "settings3.gradle"), properties)
+        self.assertEqual(len(projects), 1)
+        self.assertEqual(projects[0]["name"], "myAwesomeApp")
+        self.assertFalse(projects[0]["is_subprojects"])
 
     def testParseGradle(self):
-        obj = syndle.gradle.parse(self.CURRENT_PATH + "/test/root.gradle")
+        properties = syndle.load_gradle_property(os.path.join(self.CURRENT_PATH, "test",  "gradle.properties"))
+        obj = syndle.gradle.parse(self.CURRENT_PATH + "/test/root.gradle", properties)
 
         projects = ["https://www.jitpack.io", "google", "https://www.jitpack.io", "google", "jcenter"]
         for key in obj["buildscript"]["repositories"]:
