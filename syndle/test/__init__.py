@@ -9,19 +9,19 @@ class TestSyndle(TestCase):
     CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 
     def testParseSetting(self):
-        projects = syndle.gradle.list(os.path.join(self.CURRENT_PATH, "test", "settings.gradle"))
+        projects = syndle.gradle.get_projects_names(os.path.join(self.CURRENT_PATH, "test", "settings.gradle"))
         self.assertEqual(len(projects), 2)
         self.assertEqual([x["name"] for x in projects], ["app", "lib"])
 
     def testParseSetting2(self):
-        projects = syndle.gradle.list(os.path.join(self.CURRENT_PATH, "test", "settings2.gradle"))
+        projects = syndle.gradle.get_projects_names(os.path.join(self.CURRENT_PATH, "test", "settings2.gradle"))
         self.assertEqual(len(projects), 1)
         self.assertEqual(projects[0]["name"], "myAwesomeApp")
         self.assertFalse(projects[0]["is_subprojects"])
 
     def testParseSetting3(self):
         properties = syndle.load_gradle_property(os.path.join(self.CURRENT_PATH, "test",  "gradle.properties"))
-        projects = syndle.gradle.list(os.path.join(self.CURRENT_PATH, "test", "settings3.gradle"), properties)
+        projects = syndle.gradle.get_projects_names(os.path.join(self.CURRENT_PATH, "test", "settings3.gradle"), properties)
         self.assertEqual(len(projects), 1)
         self.assertEqual(projects[0]["name"], "myAwesomeApp")
         self.assertFalse(projects[0]["is_subprojects"])

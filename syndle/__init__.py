@@ -53,7 +53,7 @@ def parseInner(path):
 
     properties = load_gradle_property(os.path.join(path, "gradle.properties"))
     root = gradle.parse(os.path.join(path, "build.gradle"), properties)
-    projects = gradle.list(os.path.join(path, "settings.gradle"), properties)
+    projects = gradle.get_projects_names(os.path.join(path, "settings.gradle"), properties)
     if BUILDSCRIPT in root:
         script = root[BUILDSCRIPT]
         print(script)

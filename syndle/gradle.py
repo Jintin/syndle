@@ -4,7 +4,8 @@ block_start = re.compile(r"\s*(\w+)\s*\{")
 block_end = re.compile(r"\s*\}")
 official_repo = re.compile(r"\s*(\w+)\(\)")
 custom_repo = re.compile(r"\s*maven\s*\{")
-dep_format1 = re.compile(r"\s*(classpath|test\w*|compile\w*)\s+group\s*:\s*'([\w\.]+)'\s*,\s*name\s*:\s*'([\w\.\-]+)'\s*,\s*version:\s*('?[\w\.0-9]+'?)")
+dep_format1 = re.compile(
+    r"\s*(classpath|test\w*|compile\w*)\s+group\s*:\s*'([\w\.]+)'\s*,\s*name\s*:\s*'([\w\.\-]+)'\s*,\s*version:\s*('?[\w\.0-9]+'?)")
 dep_format2 = re.compile(r"\s*(classpath|test\w*|compile\w*)\s+'([\w\.]+):([\w\.\-]+):([\w\.0-9]+)")
 
 
@@ -126,7 +127,7 @@ def extractor(statement, start_delimiter, end_delimiter):
     return items
 
 
-def list(path, properties=None):
+def get_projects_names(path, properties=None):
     include_token = 'include'
     include_token_counter = 0
     root_project_token = 'rootProject.name'
@@ -158,7 +159,9 @@ def list(path, properties=None):
                         else:
                             property_token = item
                             if properties is None:
-                                raise Exception("Could not evaluate the property {0} without properties dictionary".format(property_token))
+                                raise Exception(
+                                    "Could not evaluate the property {0} without properties dictionary".format(
+                                        property_token))
                             item = properties.get(property_token, None)
                             if item is None:
                                 raise Exception("Property not found '{0}'".format(property_token))
